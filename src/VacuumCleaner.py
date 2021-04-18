@@ -11,30 +11,26 @@ class Vacuum :
 	L_POS_X = 0
 	L_POS_Y = 0
 
-	def __init__(self, room_grid, grid_rows, grid_cols):
+	def __init__(self, grid_rows, grid_cols):
 
-		self.ROOM_GRID = room_grid
 		self.ROOM_COLS = grid_cols
-		self.ROOM_ROWS = grid_cols
+		self.ROOM_ROWS = grid_rows
 
-	def move_horizontal(self):
+	def move_horizontal_and_vertical(self):
 
-		if self.N_POS_X >= 0 : # Will Change The Vacuum Direction To Move From Left To Right
-			self.N_POS_X += 1 # This Imitates Moving To The Right
+		if self.N_POS_X >= 0:  # Will Change The Vacuum Direction To Move From Left To Right
 
-		elif self.N_POS_X <= self.ROOM_ROWS: # Will Change The Vacuum Direction To Move From Right To Left
-			self.N_POS_X -=1 # This Imitate Moving To The Left
+			if self.N_POS_X is 0:
+				self.down()     # Move The Vacuum Down
 
+			self.N_POS_X += 1   # This Imitates Moving To The Right
 
-	def left(self):
+		elif self.N_POS_X <= self.ROOM_ROWS:    # Will Change The Vacuum Direction To Move From Right To Left
 
-		if self.N_POS_X is not 0 or self.N_POS_X is not self.ROOM_ROWS:
-			self.N_POS_X -= 1
+			if self.N_POS_X is self.ROOM_ROWS:
+				self.down()
 
-	def right(self):
-
-		if self.N_POS_X is not 0 or self.N_POS_X is not self.ROOM_ROWS:
-			self.N_POS_X += 1
+			self.N_POS_X -= 1   # This Imitate Moving To The Left
 
 	def up(self):
 
@@ -63,16 +59,10 @@ class Vacuum :
 
 		self.set_position_val(0) # Cleaning sets the current tile/position value to Zero|0
 
-	def make_move(self):
-
-		if self.N_POS_X is not self.ROOM_ROWS:
-			self.right()
-		else:
-			self.down()
-			self.N_POS_X = 0 # Start At The Beginning Of The Row
-
 	def move(self, env):
 
 		if self.is_dirty():
 			self.clean()
 		else:
+
+			self.move_horizontal_and_vertical()
