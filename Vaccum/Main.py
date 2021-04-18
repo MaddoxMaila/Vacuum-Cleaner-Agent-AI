@@ -1,14 +1,14 @@
 from Vaccum.Environment import Environment
 from Vaccum.VacuumCleaner import VacuumCleaner
 
-
-Room = Environment(10, 10)
+Room = Environment(1, 2)
 
 Room.build_room()
 
+
 VacuumAgent = VacuumCleaner(Room.get_rows(), Room.get_cols())
 
-VacuumAgent.move(Room)
+VacuumAgent.percepts(Room)
 
 print(Room.get_room())
 print(VacuumAgent.get_tiles_cleaned())

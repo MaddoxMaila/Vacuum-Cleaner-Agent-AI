@@ -58,18 +58,26 @@ class VacuumCleaner:
 		self.ROOM_ROWS = grid_rows
 
 	def show_pos(self, where) -> None:
+
+		"""
+		:param where: name of method that called this method, its for debuggin purposes
+		:return: None
+		"""
 		print("{} :=> (x = {}, y = {})".format(where, self.N_POS_X, self.N_POS_Y))
 
 	def get_time(self) -> dict:
+
+		"""
+		:return: start & end times of the Vacuum
+		"""
 		return {"start": self.START_TIME, "end": self.END_TIME}
 
-	def move_horizontal_and_vertical(self) -> None:
+	def move_horizontal_and_vertical(self) -> str:
 
 		"""
 		Give The Vacuum The Ability To Move Around The Room
 		:return: None
 		"""
-
 		if 0 <= self.N_POS_X <= self.ROOM_ROWS:  # Will Change The Vacuum Direction To Move From Left To Right
 			self.right()
 
@@ -77,38 +85,74 @@ class VacuumCleaner:
 			self.down()
 			self.N_POS_X = 0
 
+		return 'Move'
+
 	def right(self) -> None:
 
+		"""
+		Move Vacuum Right
+		:return: None
+		"""
 		if self.N_POS_X is not self.ROOM_ROWS:
 			self.N_POS_X += 1   # Move The Vacuum Right
 
 	def left(self) -> None:
+
+		"""
+		Move Vacuum Left
+		:return: None
+		"""
 
 		if self.N_POS_X is not self.ROOM_ROWS:
 			self.N_POS_X -= 1   # Move The Vacuum Left
 
 	def up(self) -> None:
 
+		"""
+		Move Vacuum Up
+		:return: None
+		"""
 		if self.N_POS_Y is not 0 or self.N_POS_Y is not self.ROOM_COLS:
 			self.N_POS_Y -= 1
 
 	def down(self) -> None:
 
+		"""
+		Move Vacuum Down
+		:return: None
+		"""
 		if self.N_POS_Y is not 0 or self.N_POS_Y is not self.ROOM_COLS:
 			self.N_POS_Y += 1
 
 	def set_position_val(self, val) -> None:
+
+		"""
+		:param val: Value to be set at the current position
+		:return: None
+		"""
 		self.ROOM_GRID[self.N_POS_X][self.N_POS_Y] = val
 
 	def get_position_val(self) -> int:
+
+		"""
+		:return: Return value at the current index
+		"""
 		if len(self.ROOM_GRID) is 0:
 			return 0
 		return self.ROOM_GRID[self.N_POS_X][self.N_POS_Y]
 
 	def get_dirty_distances(self) -> list:
+
+		"""
+		:return: List containing number of distances between dirty tiles
+		"""
 		return self.DIRTY_TILES_DISTANCES
 
 	def get_tiles_cleaned(self) -> int:
+
+		"""
+		:return: Number of tiles cleaned by the vacuum
+		"""
 		return self.ROOM_TILES_CLEANED
 
 	def calculate_distance(self) -> None:
@@ -152,7 +196,7 @@ class VacuumCleaner:
 		else:
 			return False
 
-	def clean(self) -> None:
+	def clean(self) -> str:
 
 		"""
 		Clean Dirty Tiles By Just Setting Dirty Tile Value To 0
@@ -166,21 +210,56 @@ class VacuumCleaner:
 		self.calculate_distance()   # Calculate distance between two dirty tiles
 
 		self.ROOM_TILES_CLEANED += 1    # Increment Number Of Clean Tiles After Each Clean
+		return  'Clean'
 
-	def start(self, env: Environment) -> None:
+	def percepts(self, env: Environment) -> None:
+
+		"""
+		Start The Process Of Cleaning The Environment
+		:param env: The Environment The Vacuum Be Cleaning
+		:return: None
+		"""
 
 		self.ROOM_GRID = env.get_room()
 
-		while self.N_POS_X is not env.get_rows() and self.N_POS_Y is not env.get_cols():
+		self.START_TIME = time.time()   # Start timer
 
-			if self.is_dirty():  # Check For Dirtiness
+		"""
+			While The Vacuum Has Not Reached The End Of The Room, Keep Cleaning
+		"""
+		while self.at_end(env):
 
-				self.clean()  # Clean The Tile
+			self.show_pos("start")  # For Debugging
 
-			else:
-				self.move_horizontal_and_vertical()
+			self.action()
+
+		self.END_TIME = time.time()     # End Timer
+
+	def action(self) -> str:
+
+		"""
+		:return: Returns An Action Done By The Vacuum
+		"""
+		if self.is_dirty():  # Check For Dirtiness
+			return self.clean()  # Clean The Tile
+		else:
+			return self.move_horizontal_and_vertical()  # Keep Moving
+
+	def at_end(self, env: Environment) -> bool:
+
+		"""
+		Checks Whether The Vacuum Has Reached The End Of The Environment
+		:param env: Environment The Vacuum Is In
+		:return bool: True | Fasle
+		"""
+		return self.N_POS_X is not env.get_rows() and self.N_POS_Y is not env.get_cols()
 
 	def move(self, env: Environment) -> None:
+
+		"""
+		:param env: The Environment the Vacuum Will be Working in
+		:return: None
+		"""
 
 		self.ROOM_GRID = env.get_room()     # Set Room To This Class Level Var
 
@@ -222,6 +301,6 @@ class VacuumCleaner:
 		"""
 			Set A Cleaned Room As The New Room
 		"""
-		print(self.ROOM_GRID)
-		env.set_room(self.ROOM_GRID)
+		print(self.ROOM_GRID)   # Debugging
+		env.set_room(self.ROOM_GRID)    # Debugging
 
