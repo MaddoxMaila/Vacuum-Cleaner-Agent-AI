@@ -1,3 +1,11 @@
-import Vaccum.Environment as ENV
+from Vaccum.Environment import Environment
+from Vaccum.VacuumCleaner import VacuumCleaner
 
-ROOM = ENV(3, 5)
+
+Room = Environment(1, 2)
+
+Room.build_room()
+
+VacuumAgent = VacuumCleaner(Room.get_rows(), Room.get_cols())
+
+VacuumAgent.move(Room)

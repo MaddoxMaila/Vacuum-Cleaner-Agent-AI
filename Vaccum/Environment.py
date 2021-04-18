@@ -1,5 +1,6 @@
 import random
 
+
 class Environment:
 
 	ROOM = []
@@ -11,7 +12,7 @@ class Environment:
 	CLEAN_TILE = 0
 	CHILD = 'C'
 
-	def __init__(self, n, m):
+	def __init__(self, n: int, m: int):
 
 		self.ROOM_ROWS = n
 		self.ROOM_COLS = m
@@ -38,12 +39,13 @@ class Environment:
 				print(self.ROOM_TILE)
 
 			self.ROOM.append(temp_list)
+			print(self.ROOM)
 
-	def get_room(self):
+	def get_room(self) -> list:
 		return self.ROOM
 
-	def get_rows(self):
+	def get_rows(self) -> int:
 		return self.ROOM_ROWS
 
-	def get_cols(self):
+	def get_cols(self) -> int:
 		return self.ROOM_COLS
