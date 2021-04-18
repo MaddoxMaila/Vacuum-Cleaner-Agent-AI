@@ -17,32 +17,35 @@ class Environment:
 		self.ROOM_ROWS = n
 		self.ROOM_COLS = m
 
-	def build_room(self):
+	def build_room(self) -> None:
 
-		for i in range(0, self.ROOM_COLS + 1):
+		if self.ROOM_ROWS * self.ROOM_COLS <= 1:
+
+			print("{}*{} > 1 : Your Room/Grid Should be greater than 1".format(self.ROOM_ROWS, self.ROOM_COLS))
+			return
+
+		for i in range(0, self.ROOM_ROWS + 1):
 
 			temp_list = []
 
-			for j in range(0, self.ROOM_ROWS + 1):
+			for j in range(0, self.ROOM_COLS):
 
 				random_num = random.uniform(0, 1)
 
-				print(random_num)
-
-				if random_num >= 0.1:   # Imitate 10% chance of the tile becoming dirty
+				if random_num <= 0.1:   # Imitate 10% chance of the tile becoming dirty
 					temp_list.append(self.DIRTY_TILE)
 					self.ROOM_TILE = 1
 				else:
 					temp_list.append(self.CLEAN_TILE)
 					self.ROOM_TILE = 0
 
-				print(self.ROOM_TILE)
-
 			self.ROOM.append(temp_list)
-			print(self.ROOM)
 
 	def get_room(self) -> list:
 		return self.ROOM
+
+	def set_room(self, room: list) -> None:
+		self.ROOM = room
 
 	def get_rows(self) -> int:
 		return self.ROOM_ROWS
