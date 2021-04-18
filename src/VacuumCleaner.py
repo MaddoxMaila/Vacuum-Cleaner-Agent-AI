@@ -17,6 +17,15 @@ class Vacuum :
 		self.ROOM_COLS = grid_cols
 		self.ROOM_ROWS = grid_cols
 
+	def move_horizontal(self):
+
+		if self.N_POS_X >= 0 : # Will Change The Vacuum Direction To Move From Left To Right
+			self.N_POS_X += 1 # This Imitates Moving To The Right
+
+		elif self.N_POS_X <= self.ROOM_ROWS: # Will Change The Vacuum Direction To Move From Right To Left
+			self.N_POS_X -=1 # This Imitate Moving To The Left
+
+
 	def left(self):
 
 		if self.N_POS_X is not 0 or self.N_POS_X is not self.ROOM_ROWS:
@@ -55,7 +64,12 @@ class Vacuum :
 		self.set_position_val(0) # Cleaning sets the current tile/position value to Zero|0
 
 	def make_move(self):
-		pass
+
+		if self.N_POS_X is not self.ROOM_ROWS:
+			self.right()
+		else:
+			self.down()
+			self.N_POS_X = 0 # Start At The Beginning Of The Row
 
 	def move(self, env):
 
