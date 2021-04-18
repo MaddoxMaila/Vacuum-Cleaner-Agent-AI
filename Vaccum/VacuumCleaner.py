@@ -1,6 +1,6 @@
+import Vaccum.Environment as ENV
 
-
-class Vacuum :
+class VacuumCleaner:
 
 	ROOM_GRID = None
 	ROOM_ROWS = 0
@@ -42,13 +42,13 @@ class Vacuum :
 		if self.N_POS_Y is not 0 or self.N_POS_Y is not self.ROOM_COLS:
 			self.N_POS_Y += 1
 
-	def set_position_val(self, val):
+	def set_position_val(self, val) -> int:
 		self.ROOM_GRID[self.N_POS_X][self.N_POS_Y] = val
 
-	def get_position_val(self):
+	def get_position_val(self) -> int:
 		return self.ROOM_GRID[self.N_POS_X][self.N_POS_Y]
 
-	def is_dirty(self):
+	def is_dirty(self) -> bool :
 
 		if self.get_position_val() is 0:
 			return True
@@ -57,12 +57,25 @@ class Vacuum :
 
 	def clean(self):
 
-		self.set_position_val(0) # Cleaning sets the current tile/position value to Zero|0
+		self.set_position_val(0)    # Cleaning sets the current tile/position value to Zero|0
 
-	def move(self, env):
+	def move(self, env: ENV.Environment):
 
-		if self.is_dirty():
-			self.clean()
-		else:
+		for y in range(0, env.get_cols()):
 
-			self.move_horizontal_and_vertical()
+			for x in range(0, env.get_rows()):
+
+				"""
+					Whatever Matrix You Get, Transform It On The X-Axis Plane...
+					Logical Miscalculations From My Side -_-
+					x, y -> represent ordered paired coords (x, y)
+				"""
+				self.ROOM_COLS = y
+				self.ROOM_ROWS = x
+
+				if self.is_dirty():     # Check For Dirtiness
+
+					self.clean()    # Clean The Tile
+
+				else:
+					self.move_horizontal_and_vertical()
