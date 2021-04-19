@@ -1,5 +1,6 @@
 from Vaccum.Environment import Environment
 import math
+from datetime import datetime
 import time
 
 
@@ -22,6 +23,7 @@ class VacuumCleaner:
 	ROOM_GRID = []
 	ROOM_ROWS = 0
 	ROOM_COLS = 0
+	ROOM_ITERATION = 1
 
 	"""
 		Class Level Vars To Keep Position Of Vaccum
@@ -46,6 +48,7 @@ class VacuumCleaner:
 	"""
 	START_TIME = 0
 	END_TIME = 0
+	TIME_FORMATTER = '%S.%f'
 
 	def __init__(self, grid_rows, grid_cols):
 
@@ -157,11 +160,18 @@ class VacuumCleaner:
 
 	def calculate_distance(self) -> None:
 
+
 		"""
 		Calculate distance between two dirty tile using the Euclidian Space Formula
 		:return: None
 		"""
-		self.DIRTY_TILES_DISTANCES.append(math.sqrt(self.x_powers() + self.y_powers()))
+		# if self.L_POS_X is not 0 and self.L_POS_Y is not 0:
+		curr_dist = {
+			"A": "({}, {})".format(self.L_POS_X, self.L_POS_Y),
+			"B": "({}, {})".format(self.N_POS_X, self.N_POS_Y),
+			"distance": math.sqrt(self.x_powers() + self.y_powers())
+		}
+		self.DIRTY_TILES_DISTANCES.append(curr_dist)
 
 		"""
 			The Current Dirty Tile, Becomes The Last Dirty Tile
@@ -210,7 +220,7 @@ class VacuumCleaner:
 		self.calculate_distance()   # Calculate distance between two dirty tiles
 
 		self.ROOM_TILES_CLEANED += 1    # Increment Number Of Clean Tiles After Each Clean
-		return  'Clean'
+		return 'Clean'
 
 	def percepts(self, env: Environment) -> None:
 
@@ -222,18 +232,19 @@ class VacuumCleaner:
 
 		self.ROOM_GRID = env.get_room()
 
-		self.START_TIME = time.time()   # Start timer
+		self.START_TIME = datetime.utcnow() .strftime(self.TIME_FORMATTER)[:-3]  # Start timer
 
 		"""
 			While The Vacuum Has Not Reached The End Of The Room, Keep Cleaning
 		"""
 		while self.at_end(env):
 
-			self.show_pos("start")  # For Debugging
+			action = self.action()  # Returns An Action Done By The Vacuum
+			print("Vacuum Action : {}".format(action))
 
-			self.action()
+			time.sleep(1)   # Each Action The Vacuum Makes Takes One Second
 
-		self.END_TIME = time.time()     # End Timer
+		self.END_TIME = datetime.utcnow() .strftime(self.TIME_FORMATTER)[:-3]     # End Timer
 
 	def action(self) -> str:
 
@@ -268,7 +279,7 @@ class VacuumCleaner:
 			to traverse trough all indexes.
 			Also helps in having ordered pairs of coords (x, y)
 		"""
-		self.START_TIME = time.time()
+		self.START_TIME = datetime.utcnow() .strftime(self.TIME_FORMATTER)[:-3]
 		for y in range(0, env.get_cols()):
 
 			"""
@@ -296,7 +307,7 @@ class VacuumCleaner:
 				else:
 					self.move_horizontal_and_vertical()
 
-		self.END_TIME = time.time()
+		self.END_TIME = datetime.utcnow() .strftime(self.TIME_FORMATTER)[:-3]
 
 		"""
 			Set A Cleaned Room As The New Room
